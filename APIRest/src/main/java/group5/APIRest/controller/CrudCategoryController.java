@@ -1,9 +1,8 @@
 package group5.APIRest.controller;
-
 import org.springframework.ui.Model;
+import group5.APIRest.models.Categories;
 import org.springframework.web.bind.annotation.*;
 
-import group5.APIRest.models.Categories;
 
 
 @RestController
@@ -22,8 +21,7 @@ public class CrudCategoryController {
 
     @PostMapping("")
     public String createCategory(@ModelAttribute Categories category, Model model){
-        model.addAttribute("user", new User());
-        
+
         return "New category added";
     }
 

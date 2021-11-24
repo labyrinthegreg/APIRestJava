@@ -11,5 +11,5 @@ public class CategoryDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List< >
+    public List<>
 }
