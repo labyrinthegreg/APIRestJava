@@ -19,6 +19,11 @@ public class CategoryDao {
         return jdbcTemplate.update(sql, new Object[] {name});
     }
 
+    public int updateCategory(Integer id, Categories category){
+        String sql = "update categories set name = ? where id = ?";
+        return jdbcTemplate.update(sql, new Object[] {category.getName(), id});
+    }
+
     public int deleteCategory(Integer id){
         String sql = "delete from categories where id = ?";
         return jdbcTemplate.update(sql, id);

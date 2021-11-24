@@ -35,8 +35,9 @@ public class CrudCategoryController {
     }
 
     @PutMapping("/{id}")
-    public String updateCategory(@PathVariable("id") int id){
-        return "";
+    public String updateCategory(@PathVariable("id") int id, @RequestBody Categories category){
+        categoryDao.updateCategory(id, category);
+        return "Category number " + id + " have been updated and is now named " + category.getName();
     }
 
     @DeleteMapping("/{id}")
