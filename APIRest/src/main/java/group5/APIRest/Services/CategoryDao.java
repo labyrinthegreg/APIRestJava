@@ -44,12 +44,14 @@ public class CategoryDao {
 
     public int updateCategory(int id, Categories category){
         String sql = "update categories set name = ? where id = ?";
-        return jdbcTemplate.update(sql, new Object[] {category.getName(), id});
+        Object[] value = new Object[]{category.getName(), id};
+        return this.updateAndClose(sql, value);
     }
 
     public int deleteCategory(Integer id){
         String sql = "delete from categories where id = ?";
-        return jdbcTemplate.update(sql, id);
+        Object[] value = new Object[]{id};
+        return this.updateAndClose(sql, value);
     }
 }
 
