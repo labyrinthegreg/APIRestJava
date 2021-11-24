@@ -15,4 +15,9 @@ public class ProductsDao {
         String sql = "INSERT INTO products (name , type, rating) VALUES (?, ?, ?);";
         return jdbcTemplate.update(sql, products.getName(), products.getType(), products.getRating());
     }
+
+    public int delete(Integer id){
+        String sql = "DELETE FROM products WHERE id = ?";
+        return  jdbcTemplate.update(sql, id);
+    }
 }

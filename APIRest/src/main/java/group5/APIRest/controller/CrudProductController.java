@@ -34,8 +34,10 @@ public class CrudProductController {
 
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable("id") int id){
+        productsDao.delete(id);
         return "";
     }
+
 
 
 }
