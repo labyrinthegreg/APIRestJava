@@ -1,10 +1,15 @@
 package group5.APIRest.controller;
 
+import group5.APIRest.Services.ProductsDao;
+import group5.APIRest.models.Products;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/products")
 public class CrudProductController {
+    @Autowired
+    private ProductsDao productsDao;
 
     @GetMapping("")
     public String readAllProducts(){
@@ -17,8 +22,9 @@ public class CrudProductController {
     }
 
     @PostMapping("")
-    public String createProduct(){
-        return "";
+    public void createProduct(@RequestBody Products newProducts){
+        productsDao.add(newProducts);
+        return;
     }
 
     @PutMapping("/{id}")
@@ -30,5 +36,6 @@ public class CrudProductController {
     public String deleteProduct(@PathVariable("id") int id){
         return "";
     }
+
 
 }
