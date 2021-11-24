@@ -23,6 +23,7 @@ public class CategoryDao {
 
     public List<Categories> listAll() {
         String sql = "SELECT * FROM categories;";
+        this.value = null;
         return this.executeAndClose(sql);
     }
 
@@ -30,13 +31,14 @@ public class CategoryDao {
         String sql = "SELECT C.name, C.description FROM Categories as C WHERE C.id = ?";
         this.value = new String[]{String.valueOf(id)};
         return this.executeAndClose(sql).get(0);
+    }
 
     public int addCategory(Categories category){
         String sql = "INSERT INTO categories (name) VALUES (?)";
         return jdbcTemplate.update(sql, category.getName(););
     }
 
-    public int updateCategory(Integer id, Categories category){
+    public int updateCategory(int id, Categories category){
         String sql = "update categories set name = ? where id = ?";
         return jdbcTemplate.update(sql, new Object[] {category.getName(), id});
     }

@@ -25,11 +25,12 @@ public class ProductsDao {
         return jdbcTemplate.update(sql, products.getName(), products.getType(), products.getRating(), products.getCategory_id());
     }
     public List<Products> readAll(){
-        String sql = "SELECT P.name, P.type, P.rating, P.created_at FROM Products as P";
+        String sql = "SELECT P.id, P.name, P.type, P.rating, P.created_at FROM Products as P";
+        this.value = null;
         return this.executeAndClose(sql);
     }
     public Products readOneById(int id){
-        String sql = "SELECT P.name, P.type, P.rating, P.created_at FROM Products as P WHERE P.id = ?";
+        String sql = "SELECT P.id, P.name, P.type, P.rating, P.created_at FROM Products as P WHERE P.id = ?";
         this.value = new String[]{String.valueOf(id)};
         return this.executeAndClose(sql).get(0);
     }
