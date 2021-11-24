@@ -14,9 +14,8 @@ public class CategoryDao {
     private JdbcTemplate jdbcTemplate;
 
     public int addCategory(Categories category){
-        String name = category.getName();
         String sql = "INSERT INTO categories (name) VALUES (?)";
-        return jdbcTemplate.update(sql, new Object[] {name});
+        return jdbcTemplate.update(sql, category.getName(););
     }
 
     public int updateCategory(Integer id, Categories category){
