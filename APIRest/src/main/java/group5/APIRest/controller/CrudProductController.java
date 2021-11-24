@@ -13,9 +13,6 @@ public class CrudProductController {
     @Autowired
     private ProductsDao productsDao;
 
-    @Autowired
-    private ProductsDao productsDao;
-
     @GetMapping("")
     public List<Products> readAllProducts(){
         return productsDao.readAll();

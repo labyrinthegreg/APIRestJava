@@ -10,6 +10,4 @@ import org.springframework.stereotype.Repository;
 public class CategoryDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    public List<>
 }

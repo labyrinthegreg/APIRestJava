@@ -21,8 +21,8 @@ public class ProductsDao {
     }
 
     public int add(Products products){
-        String sql = "INSERT INTO products (name , type, rating) VALUES (?, ?, ?);";
-        return jdbcTemplate.update(sql, products.getName(), products.getType(), products.getRating());
+        String sql = "INSERT INTO products (name , type, rating, category_id) VALUES (?, ?, ?, ?);";
+        return jdbcTemplate.update(sql, products.getName(), products.getType(), products.getRating(), products.getCategory_id());
     }
     public List<Products> readAll(){
         String sql = "SELECT P.name, P.type, P.rating, P.created_at FROM Products as P";
