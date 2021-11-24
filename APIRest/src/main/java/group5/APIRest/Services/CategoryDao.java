@@ -20,6 +20,9 @@ public class CategoryDao {
     private List<Categories> executeAndClose(String sql){
         return jdbcTemplate.query(sql, this.value, BeanPropertyRowMapper.newInstance(Categories.class));
     }
+    private  int updateAndClose(String sql, Object[] value){
+        return jdbcTemplate.update(sql, value);
+    }
 
     public List<Categories> listAll() {
         String sql = "SELECT * FROM categories;";
@@ -35,7 +38,8 @@ public class CategoryDao {
 
     public int addCategory(Categories category){
         String sql = "INSERT INTO categories (name) VALUES (?)";
-        return jdbcTemplate.update(sql, category.getName(););
+        Object[] value = new Object[]{category.getName()};
+        return this.updateAndClose(sql, value);
     }
 
     public int updateCategory(int id, Categories category){
