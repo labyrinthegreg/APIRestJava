@@ -22,8 +22,8 @@ public class CrudCategoryController {
     }
 
     @GetMapping("/{id}")
-    public String readCategoryById(@PathVariable("id") int id){
-        return "";
+    public Categories readCategoryById(@PathVariable("id") int id){
+        return categoryDao.listOneById(id);
     }
 
     @PostMapping("")
