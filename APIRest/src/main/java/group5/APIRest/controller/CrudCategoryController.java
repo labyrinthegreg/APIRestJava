@@ -1,6 +1,9 @@
 package group5.APIRest.controller;
-
+import org.springframework.ui.Model;
+import group5.APIRest.models.Categories;
 import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/categories")
@@ -17,8 +20,9 @@ public class CrudCategoryController {
     }
 
     @PostMapping("")
-    public String createCategory(){
-        return "";
+    public String createCategory(@ModelAttribute Categories category, Model model){
+
+        return "New category added";
     }
 
     @PutMapping("/{id}")
