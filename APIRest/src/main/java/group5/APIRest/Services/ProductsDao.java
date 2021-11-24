@@ -33,4 +33,9 @@ public class ProductsDao {
         this.value = new String[]{String.valueOf(id)};
         return this.executeAndClose(sql).get(0);
     }
+
+    public int delete(Integer id){
+        String sql = "DELETE FROM products WHERE id = ?";
+        return  jdbcTemplate.update(sql, id);
+    }
 }
