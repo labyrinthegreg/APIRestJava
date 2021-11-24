@@ -1,5 +1,6 @@
 package group5.APIRest.Services;
 
+import group5.APIRest.models.Categories;
 import group5.APIRest.models.Products;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -29,12 +30,12 @@ public class ProductsDao {
         return this.updateAndClose(sql, value);
     }
     public List<Products> readAll(){
-        String sql = "SELECT P.id, P.name, P.type, P.rating, P.created_at FROM Products as P";
+        String sql = "SELECT * FROM Products";
         this.value = null;
         return this.executeAndClose(sql);
     }
     public Products readOneById(int id){
-        String sql = "SELECT P.id, P.name, P.type, P.rating, P.created_at FROM Products as P WHERE P.id = ?";
+        String sql = "SELECT * FROM Products as P WHERE P.id = ?";
         this.value = new String[]{String.valueOf(id)};
         return this.executeAndClose(sql).get(0);
     }
@@ -42,5 +43,10 @@ public class ProductsDao {
     public int delete(Integer id){
         String sql = "DELETE FROM products WHERE id = ?";
         return  this.updateAndClose(sql, new Object[]{id});
+    }
+
+    public int updateProduct(Integer id, Products product){
+        String sql = "update products set name = ?, type = ?, rating = ?, category_id = ? where id = ?";
+        return jdbcTemplate.update(sql, new Object[] {product.getName(), product.getType(), product.getRating(), product.getCategory_id() , id});
     }
 }
