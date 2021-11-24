@@ -20,8 +20,8 @@ public class CrudProductController {
     }
 
     @GetMapping("/{id}")
-    public String readProductById(@PathVariable("id") int id){
-        return "";
+    public Products readProductById(@PathVariable("id") int id){
+        return productsDao.readOneById(id);
     }
 
     @PostMapping("")

@@ -13,8 +13,10 @@ public class ProductsDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private String[] value = null;
+
     private List<Products> executeAndClose(String sql){
-        return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Products.class));
+        return jdbcTemplate.query(sql, this.value, BeanPropertyRowMapper.newInstance(Products.class));
     }
 
     public int add(Products products){
@@ -24,5 +26,10 @@ public class ProductsDao {
     public List<Products> readAll(){
         String sql = "SELECT P.name, P.type, P.rating, P.created_at FROM Products as P";
         return this.executeAndClose(sql);
+    }
+    public Products readOneById(int id){
+        String sql = "SELECT P.name, P.type, P.rating, P.created_at FROM Products as P WHERE P.id = ?";
+        this.value = new String[]{String.valueOf(id)};
+        return this.executeAndClose(sql).get(0);
     }
 }
