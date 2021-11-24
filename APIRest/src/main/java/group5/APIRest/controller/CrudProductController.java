@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/products")
 public class CrudProductController {
 
-    @GetMapping("/")
+    @GetMapping("")
     public String readAllProducts(){
         return "";
     }
@@ -16,7 +16,7 @@ public class CrudProductController {
         return "";
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public String createProduct(){
         return "";
     }

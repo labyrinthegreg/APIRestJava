@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/categories")
 public class CrudCategoryController {
 
-    @GetMapping("/")
+    @GetMapping("")
     public String readAllCategories(){
         return "";
     }
@@ -16,7 +16,7 @@ public class CrudCategoryController {
         return "";
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public String createCategory(){
         return "";
     }
