@@ -20,24 +20,29 @@ public class ProductsDao {
     private List<Products> executeAndClose(String sql){
         return jdbcTemplate.query(sql, this.value, BeanPropertyRowMapper.newInstance(Products.class));
     }
+    private  int updateAndClose(String sql, Object[] value){
+        return jdbcTemplate.update(sql, value);
+    }
 
     public int add(Products products){
         String sql = "INSERT INTO products (name , type, rating, category_id) VALUES (?, ?, ?, ?);";
-        return jdbcTemplate.update(sql, products.getName(), products.getType(), products.getRating(), products.getCategory_id());
+        Object[] value = new Object[]{products.getName(), products.getType(), products.getRating(), products.getCategory_id()};
+        return this.updateAndClose(sql, value);
     }
     public List<Products> readAll(){
-        String sql = "SELECT P.name, P.type, P.rating, P.created_at FROM Products as P";
+        String sql = "SELECT * FROM Products";
+        this.value = null;
         return this.executeAndClose(sql);
     }
     public Products readOneById(int id){
-        String sql = "SELECT P.name, P.type, P.rating, P.created_at FROM Products as P WHERE P.id = ?";
+        String sql = "SELECT * FROM Products as P WHERE P.id = ?";
         this.value = new String[]{String.valueOf(id)};
         return this.executeAndClose(sql).get(0);
     }
 
     public int delete(Integer id){
         String sql = "DELETE FROM products WHERE id = ?";
-        return  jdbcTemplate.update(sql, id);
+        return  this.updateAndClose(sql, new Object[]{id});
     }
 
     public int updateProduct(Integer id, Products product){

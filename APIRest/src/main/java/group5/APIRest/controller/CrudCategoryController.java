@@ -18,8 +18,6 @@ public class CrudCategoryController {
     @Autowired
     private CategoryDao categoryDao;
 
-    @Autowired CategoryDao categoryDao;
-
     @GetMapping("")
     public List<Categories> readAllCategories(){
         return categoryDao.listAll();
