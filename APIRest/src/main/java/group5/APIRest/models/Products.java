@@ -8,6 +8,7 @@ public class Products {
     private String type;
     private int rating;
     private Date created_at;
+    private int category_id;
 
     public long getId() {
         return id;
@@ -47,5 +48,13 @@ public class Products {
 
     public void setCreated_at(Date created_at) {
         this.created_at = created_at;
+    }
+
+    public int getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(int category_id) {
+        this.category_id = category_id;
     }
 }
