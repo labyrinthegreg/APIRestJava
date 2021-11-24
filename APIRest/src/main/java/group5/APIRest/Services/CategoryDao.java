@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import group5.APIRest.models.Categories;
+
 @Repository
 public class CategoryDao {
     @Autowired
@@ -28,5 +30,22 @@ public class CategoryDao {
         String sql = "SELECT C.name, C.description FROM Categories as C WHERE C.id = ?";
         this.value = new String[]{String.valueOf(id)};
         return this.executeAndClose(sql).get(0);
+
+    public int addCategory(Categories category){
+        String name = category.getName();
+        String sql = "INSERT INTO categories (name) VALUES (?)";
+        return jdbcTemplate.update(sql, new Object[] {name});
+    }
+
+    public int updateCategory(Integer id, Categories category){
+        String sql = "update categories set name = ? where id = ?";
+        return jdbcTemplate.update(sql, new Object[] {category.getName(), id});
+    }
+
+    public int deleteCategory(Integer id){
+        String sql = "delete from categories where id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 }
+
+
