@@ -18,4 +18,9 @@ public class CategoryDao {
         String sql = "INSERT INTO categories (name) VALUES (?)";
         return jdbcTemplate.update(sql, new Object[] {name});
     }
+
+    public int deleteCategory(Integer id){
+        String sql = "delete from categories where id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
 }

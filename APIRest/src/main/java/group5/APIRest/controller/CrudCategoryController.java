@@ -1,21 +1,15 @@
 package group5.APIRest.controller;
-<<<<<<< HEAD
 
 import com.fasterxml.jackson.core.sym.Name;
 
 import org.springframework.beans.factory.annotation.Autowired;
-=======
->>>>>>> main
 import org.springframework.ui.Model;
 import group5.APIRest.models.Categories;
 import org.springframework.web.bind.annotation.*;
 
-<<<<<<< HEAD
 import group5.APIRest.Services.CategoryDao;
 import group5.APIRest.models.Categories;
 import net.minidev.json.JSONObject;
-=======
->>>>>>> main
 
 
 @RestController
@@ -35,9 +29,9 @@ public class CrudCategoryController {
     }
 
     @PostMapping("")
-    public void createCategory(@RequestBody Categories category){
+    public String createCategory(@RequestBody Categories category){
         categoryDao.addCategory(category); 
-        return ;
+        return "New category created with name " + category.getName() ;
     }
 
     @PutMapping("/{id}")
@@ -47,6 +41,7 @@ public class CrudCategoryController {
 
     @DeleteMapping("/{id}")
     public String deleteCategory(@PathVariable("id") int id){
-        return "";
+        categoryDao.deleteCategory(id);
+        return "Category number " + id + " have been deleted";
     }
 }
