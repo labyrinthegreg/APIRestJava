@@ -8,10 +8,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Repository
 public class ProductsDao {
     @Autowired
+
     private JdbcTemplate jdbcTemplate;
 
     public int add(Products products){
-        String sql = "INSERT INTO products (name , created_at , type, rating) VALUES (?, ?, ?, ?);";
-        return jdbcTemplate.update(sql, products.getName(), products.getCreated_at(), products.getType(), products.getRating());
+        String sql = "INSERT INTO products (name , type, rating) VALUES (?, ?, ?);";
+        return jdbcTemplate.update(sql, products.getName(), products.getType(), products.getRating());
     }
 }
