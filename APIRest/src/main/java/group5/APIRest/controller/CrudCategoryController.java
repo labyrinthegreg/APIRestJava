@@ -1,14 +1,21 @@
 package group5.APIRest.controller;
+<<<<<<< HEAD
 
 import com.fasterxml.jackson.core.sym.Name;
 
 import org.springframework.beans.factory.annotation.Autowired;
+=======
+>>>>>>> main
 import org.springframework.ui.Model;
+import group5.APIRest.models.Categories;
 import org.springframework.web.bind.annotation.*;
 
+<<<<<<< HEAD
 import group5.APIRest.Services.CategoryDao;
 import group5.APIRest.models.Categories;
 import net.minidev.json.JSONObject;
+=======
+>>>>>>> main
 
 
 @RestController
