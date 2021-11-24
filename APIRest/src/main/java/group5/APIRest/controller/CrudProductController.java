@@ -14,7 +14,9 @@ public class CrudProductController {
     private ProductsDao productsDao;
 
     @GetMapping("")
-    public List<Products> readAllProducts(){
+    public List<Products> readAllProducts(@RequestParam(required = false) String asc,
+                                          @RequestParam(required = false) String desc){
+        System.out.println("Asc: "+asc+" - Desc: "+desc);
         return productsDao.readAll();
     }
 
