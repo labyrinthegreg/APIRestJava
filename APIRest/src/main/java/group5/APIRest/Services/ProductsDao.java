@@ -1,5 +1,6 @@
 package group5.APIRest.Services;
 
+import group5.APIRest.models.Categories;
 import group5.APIRest.models.Products;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -37,5 +38,10 @@ public class ProductsDao {
     public int delete(Integer id){
         String sql = "DELETE FROM products WHERE id = ?";
         return  jdbcTemplate.update(sql, id);
+    }
+
+    public int updateProduct(Integer id, Products product){
+        String sql = "update products set name = ?, type = ?, rating = ?, category_id = ? where id = ?";
+        return jdbcTemplate.update(sql, new Object[] {product.getName(), product.getType(), product.getRating(), product.getCategory_id() , id});
     }
 }
