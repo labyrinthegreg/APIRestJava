@@ -5,6 +5,8 @@ import group5.APIRest.models.Products;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/products")
 public class CrudProductController {
@@ -12,13 +14,13 @@ public class CrudProductController {
     private ProductsDao productsDao;
 
     @GetMapping("")
-    public String readAllProducts(){
-        return "";
+    public List<Products> readAllProducts(){
+        return productsDao.readAll();
     }
 
     @GetMapping("/{id}")
-    public String readProductById(@PathVariable("id") int id){
-        return "";
+    public Products readProductById(@PathVariable("id") int id){
+        return productsDao.readOneById(id);
     }
 
     @PostMapping("")
