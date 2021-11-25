@@ -18,12 +18,13 @@ public class CrudProductController {
     @GetMapping("")
     public List<Products> readAllProducts(@RequestParam(required = false) String asc,
                                           @RequestParam(required = false) String desc,
-                                          @RequestParam(required = false) String type){
+                                          @RequestParam(required = false) String type,
+                                          @RequestParam(required = false) String rating){
         System.out.println("Asc: "+asc+" - Desc: "+desc);
         String addToRequest = "";
         Object[] value = null;
 
-        Map<String, String> whereClose = HandleSortingInputService.makeFilters(type);
+        Map<String, String> whereClose = HandleSortingInputService.makeFilters(type,rating);
         addToRequest += productsDao.reqWhere(whereClose);
 
         Map<String, String> orders = HandleSortingInputService.makeOrderMap(asc, desc);
