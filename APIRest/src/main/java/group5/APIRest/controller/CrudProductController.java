@@ -39,9 +39,9 @@ public class CrudProductController {
     }
 
     @PostMapping("")
-    public void createProduct(@RequestBody Products newProducts){
+    public String createProduct(@RequestBody Products newProducts){
         productsDao.add(newProducts);
-        return;
+        return "The product has been successfully added";
     }
 
     @PutMapping("/{id}")
@@ -53,7 +53,7 @@ public class CrudProductController {
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable("id") int id){
         productsDao.delete(id);
-        return "";
+        return "The product has been successfully deleted";
     }
 
 }
