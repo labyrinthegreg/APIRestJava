@@ -3,10 +3,7 @@ package group5.APIRest.controller;
 import group5.APIRest.Services.ProductsDao;
 import group5.APIRest.models.Products;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +16,11 @@ public class SortProductController {
     @GetMapping("/orders")
     public String sortByCol(@RequestParam String range){
         return "Asc: "+range;
+    }
+
+    @GetMapping("/search")
+    public List<Products> researchProduct(@RequestParam(required = false) String type,
+                                          @RequestParam(required = false) String name){
+        return productsDao.readOneByType(type, name);
     }
 }

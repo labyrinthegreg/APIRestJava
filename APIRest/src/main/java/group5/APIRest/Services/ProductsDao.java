@@ -1,6 +1,5 @@
 package group5.APIRest.Services;
 
-import group5.APIRest.models.Categories;
 import group5.APIRest.models.Products;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -48,5 +47,14 @@ public class ProductsDao {
     public int updateProduct(Integer id, Products product){
         String sql = "update products set name = ?, type = ?, rating = ?, category_id = ? where id = ?";
         return jdbcTemplate.update(sql, new Object[] {product.getName(), product.getType(), product.getRating(), product.getCategory_id() , id});
+    }
+
+    public List<Products> readOneByType(String type, String name){
+        String sql = "SELECT * FROM PRODUCTS WHERE type = ? AND name = ?";
+        this.value = new String[]{String.valueOf(type), String.valueOf(name)};
+        for (int i = 0; i <= value.length; i++) {
+            return jdbcTemplate.query(sql, this.value, BeanPropertyRowMapper.newInstance(Products.class));
+        }
+        return null;
     }
 }
