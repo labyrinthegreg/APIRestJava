@@ -1,12 +1,13 @@
 package group5.APIRest.controller;
 
+import group5.APIRest.Services.HandleSortingInputService;
 import group5.APIRest.Services.ProductsDao;
-import group5.APIRest.models.Categories;
 import group5.APIRest.models.Products;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/products")
@@ -16,9 +17,19 @@ public class CrudProductController {
 
     @GetMapping("")
     public List<Products> readAllProducts(@RequestParam(required = false) String asc,
-                                          @RequestParam(required = false) String desc){
+                                          @RequestParam(required = false) String desc,
+                                          @RequestParam(required = false) String type){
         System.out.println("Asc: "+asc+" - Desc: "+desc);
-        return productsDao.readAll();
+        String addToRequest = "";
+        Object[] value = null;
+
+        Map<String, String> whereClose = HandleSortingInputService.makeFilters(type);
+        addToRequest += productsDao.reqWhere(whereClose);
+
+        Map<String, String> orders = HandleSortingInputService.makeOrderMap(asc, desc);
+        addToRequest += productsDao.reqOrder(orders);
+
+        return productsDao.readAll(addToRequest, value);
     }
 
     @GetMapping("/{id}")
