@@ -76,7 +76,8 @@ public class ProductsDao {
 
     public int updateProduct(Integer id, Products product){
         String sql = "update products set name = ?, type = ?, rating = ?, category_id = ? where id = ?";
-        return jdbcTemplate.update(sql, new Object[] {product.getName(), product.getType(), product.getRating(), product.getCategory_id() , id});
+        Object[] value = new Object[]{product.getName(), product.getType(), product.getRating(), product.getCategory_id(), id};
+        return this.updateAndClose(sql, value);
     }
 
     public List<Products> readOneByType(String type, String name){
