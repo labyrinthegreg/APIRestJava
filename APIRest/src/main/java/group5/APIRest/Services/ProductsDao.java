@@ -38,7 +38,37 @@ public class ProductsDao {
                         }
                         toReturn.append(entry.getKey()+" = '"+ result[i]+"'");
                     }
+                    break;
+                case "rating" :
+                    boolean comparator = entry.getValue().charAt(0) == '(';
+                    String value_ = (comparator?
+                            entry.getValue().replace("(", "").replace(")","") :
+                            entry.getValue());
+                    String[] resultRating = value_.split(",");
+                    String compare = " = ";
+                    boolean firstEntry_ = true ;
+                    for(int i=0 ; i <resultRating.length ; i++ ){
+                        if (comparator){
+                            if (i>0){
+                                compare = " <= ";
+                            }else {
+                                compare = " >= ";
+                            }
+                            if (!firstEntry_){
+                                toReturn.append(" AND ");
+                            }
+                        }
+                        if (i>0 && !comparator){
+                            toReturn.append(" OR ");
+                        }
+                        if (resultRating[i] !=""){
+                            toReturn.append(entry.getKey() + compare + resultRating[i]);
+                            firstEntry_=false;
+                        }
+                    }
+                    break;
             }
+            firstEntry = false;
         }
         return toReturn.toString();
     }
@@ -55,7 +85,7 @@ public class ProductsDao {
 
     public int add(Products products){
         String sql = "INSERT INTO products (name , type, rating, category_id) VALUES (?, ?, ?, ?);";
-        this value = new Object[]{products.getName(), products.getType(), products.getRating(), products.getCategory_id()};
+        this.value = new Object[]{products.getName(), products.getType(), products.getRating(), products.getCategory_id()};
         return this.updateAndClose(sql);
     }
     public List<Products> readAll(String sql_bis, Object[] value){
