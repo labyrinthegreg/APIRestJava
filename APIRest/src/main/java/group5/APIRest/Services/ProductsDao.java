@@ -55,7 +55,7 @@ public class ProductsDao {
 
     public int add(Products products){
         String sql = "INSERT INTO products (name , type, rating, category_id) VALUES (?, ?, ?, ?);";
-        this value = new Object[]{products.getName(), products.getType(), products.getRating(), products.getCategory_id()};
+        this.value = new Object[]{products.getName(), products.getType(), products.getRating(), products.getCategory_id()};
         return this.updateAndClose(sql);
     }
     public List<Products> readAll(String sql_bis, Object[] value){
@@ -87,12 +87,12 @@ public class ProductsDao {
         return this.updateAndClose(sql);
     }
 
-    public List<Products> readOneByType(String type, String name){
-        String sql = "SELECT * FROM PRODUCTS WHERE type = ? AND name = ?";
-        this.value = new String[]{String.valueOf(type), String.valueOf(name)};
-        for (int i = 0; i <= value.length; i++) {
-            return jdbcTemplate.query(sql, this.value, BeanPropertyRowMapper.newInstance(Products.class));
-        }
-        return null;
-    }
+    // public List<Products> readOneByType(String type, String name){
+    //     String sql = "SELECT * FROM PRODUCTS WHERE type = ? AND name = ?";
+    //     this.value = new String[]{String.valueOf(type), String.valueOf(name)};
+    //     for (int i = 0; i <= value.length; i++) {
+    //         return jdbcTemplate.query(sql, this.value, BeanPropertyRowMapper.newInstance(Products.class));
+    //     }
+    //     return null;
+    // }
 }
