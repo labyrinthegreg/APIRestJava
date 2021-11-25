@@ -23,6 +23,26 @@ public class ProductsDao {
         return jdbcTemplate.update(sql, value);
     }
 
+    public String reqWhere(Map<String, String> orders){
+        //String request = "type = Boisson OR type = pate  ";
+        StringBuilder toReturn = new StringBuilder();
+        boolean firstEntry = true;
+        for (var entry : orders.entrySet()) {
+            toReturn.append(firstEntry ? " WHERE " : " AND ");
+            switch (entry.getKey()){
+                case "type" :
+                    String[] result = entry.getValue().split(",");
+                    for(int i=0 ; i <result.length ; i++ ){
+                        if (i>0){
+                            toReturn.append(" OR ");
+                        }
+                        toReturn.append(entry.getKey()+" = '"+ result[i]+"'");
+                    }
+            }
+        }
+        return toReturn.toString();
+    }
+
     public String reqOrder(Map<String, String> orders){
         StringBuilder toReturn = new StringBuilder();
         boolean firstEntry = true;
