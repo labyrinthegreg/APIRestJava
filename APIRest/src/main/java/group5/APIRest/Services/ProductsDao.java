@@ -117,12 +117,46 @@ public class ProductsDao {
         return this.updateAndClose(sql);
     }
 
-    public List<Products> readOneByType(String type, String name){
-        String sql = "SELECT * FROM PRODUCTS WHERE type = ? AND name = ?";
-        this.value = new String[]{String.valueOf(type), String.valueOf(name)};
-        for (int i = 0; i <= value.length; i++) {
-            return jdbcTemplate.query(sql, this.value, BeanPropertyRowMapper.newInstance(Products.class));
-        }
-        return null;
+    public List<Products> genericResearch(Map<String, String> researchProducts){
+        StringBuilder addToRequest = new StringBuilder();
+        StringBuilder addToRequest2 = new StringBuilder();
+        Object[] value = null;
+        boolean firstEntry = true;
+
+        for(var entry : researchProducts.entrySet()){
+            if(entry.getKey()!="sort"){
+                addToRequest.append(firstEntry ? " WHERE " : " AND ");
+                firstEntry = false;
+            }
+            switch(entry.getKey()){
+                case "name" :
+                    addToRequest.append(entry.getKey() + " LIKE '" + entry.getValue() + "'");
+                    break;
+                case "type" :
+                    String[] result = entry.getValue().split(",");
+                    for(int i=0 ; i <result.length ; i++ ){
+                        if (i>0){
+                            addToRequest.append(" OR ");
+                        }
+                        addToRequest.append(entry.getKey()+" = '"+ result[i]+"'");
+                    }
+                    break;
+                case "sort" :
+
+                    String[] resultSort = entry.getValue().split(",");
+                    addToRequest2.append( " ORDER BY ");
+                    for(int i=0 ; i <resultSort.length ; i++ ){
+                        if (i>0){
+                            addToRequest2.append(" , ");
+                        }
+                        addToRequest2.append(entry.getValue()).append(" ").append("ASC");
+
+                    }
+
+
+
+        }}
+
+        return this.readAll(addToRequest.toString() + addToRequest2.toString(), value);
     }
 }
