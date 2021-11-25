@@ -29,7 +29,7 @@ public class SortProductController {
         String[] rangeArray = range.split("-");
         int startNb;
         int rowsCounted;
-        int lengthProducts = productsDao.readAll(" ", new Object[] {}).size();
+        int lengthProducts = productsDao.readAll(" ").size();
         if (rangeArray[0] != ""){
             startNb = Integer.parseInt(rangeArray[0]);
             rowsCounted = Integer.parseInt(rangeArray[1])+1 - startNb;

@@ -20,9 +20,7 @@ public class CrudProductController {
                                           @RequestParam(required = false) String desc,
                                           @RequestParam(required = false) String type,
                                           @RequestParam(required = false) String rating){
-        System.out.println("Asc: "+asc+" - Desc: "+desc);
         String addToRequest = "";
-        Object[] value = null;
 
         Map<String, String> whereClose = HandleSortingInputService.makeFilters(type,rating);
         addToRequest += productsDao.reqWhere(whereClose);
@@ -30,7 +28,7 @@ public class CrudProductController {
         Map<String, String> orders = HandleSortingInputService.makeOrderMap(asc, desc);
         addToRequest += productsDao.reqOrder(orders);
 
-        return productsDao.readAll(addToRequest, value);
+        return productsDao.readAll(addToRequest);
     }
 
     @GetMapping("/{id}")

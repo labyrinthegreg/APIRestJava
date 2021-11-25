@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Repository
 public class ProductsDao {
@@ -29,44 +30,37 @@ public class ProductsDao {
         boolean firstEntry = true;
         for (var entry : orders.entrySet()) {
             toReturn.append(firstEntry ? " WHERE " : " AND ");
-            switch (entry.getKey()){
-                case "type" :
+            switch (entry.getKey()) {
+                case "type" -> {
                     String[] result = entry.getValue().split(",");
-                    for(int i=0 ; i <result.length ; i++ ){
-                        if (i>0){
+                    for (int i = 0; i < result.length; i++) {
+                        if (i > 0) {
                             toReturn.append(" OR ");
                         }
-                        toReturn.append(entry.getKey()+" = '"+ result[i]+"'");
+                        toReturn.append(entry.getKey()).append(" = '").append(result[i]).append("'");
                     }
-                    break;
-                case "rating" :
-                    boolean comparator = entry.getValue().charAt(0) == '(';
-                    String value_ = (comparator?
-                            entry.getValue().replace("(", "").replace(")","") :
-                            entry.getValue());
+                }
+                case "rating" -> {
+                    boolean isRange = entry.getValue().charAt(0) == '(';
+                    String value_ = (isRange ?
+                            entry.getValue().replace("(", "").replace(")", "")
+                            : entry.getValue());
                     String[] resultRating = value_.split(",");
-                    String compare = " = ";
-                    boolean firstEntry_ = true ;
-                    for(int i=0 ; i <resultRating.length ; i++ ){
-                        if (comparator){
-                            if (i>0){
-                                compare = " <= ";
-                            }else {
-                                compare = " >= ";
-                            }
-                            if (!firstEntry_){
-                                toReturn.append(" AND ");
-                            }
+                    String comparator = (isRange ? " >= " : " = ");
+                    boolean firstEntry_ = true;
+                    for (int i = 0; i < resultRating.length; i++) {
+                        if (isRange && i > 0) {
+                            comparator = " <= ";
                         }
-                        if (i>0 && !comparator){
-                            toReturn.append(" OR ");
+                        if (!firstEntry_) {
+                            toReturn.append(isRange ? " AND " : " OR ");
                         }
-                        if (resultRating[i] !=""){
-                            toReturn.append(entry.getKey() + compare + resultRating[i]);
-                            firstEntry_=false;
+                        if (!resultRating[i].equals("")) {
+                            toReturn.append(entry.getKey()).append(comparator).append(resultRating[i]);
+                            firstEntry_ = false;
                         }
                     }
-                    break;
+                }
             }
             firstEntry = false;
         }
@@ -88,9 +82,9 @@ public class ProductsDao {
         this.value = new Object[]{products.getName(), products.getType(), products.getRating(), products.getCategory_id()};
         return this.updateAndClose(sql);
     }
-    public List<Products> readAll(String sql_bis, Object[] value){
+    public List<Products> readAll(String sql_bis){
         String sql = "SELECT * FROM Products" + sql_bis;
-        this.value = value;
+        this.value = null;
         return this.executeAndClose(sql);
     }
     public Products readOneById(int id){
@@ -119,41 +113,37 @@ public class ProductsDao {
 
     public List<Products> genericResearch(Map<String, String> researchProducts){
         StringBuilder addToRequest = new StringBuilder();
-        StringBuilder addToRequest2 = new StringBuilder();
-        Object[] value = null;
+        StringBuilder addToRequestOrder = new StringBuilder();
         boolean firstEntry = true;
 
         for(var entry : researchProducts.entrySet()){
-            if(entry.getKey()!="sort"){
+            if(!Objects.equals(entry.getKey(), "sort")){
                 addToRequest.append(firstEntry ? " WHERE " : " AND ");
                 firstEntry = false;
             }
-            switch(entry.getKey()){
-                case "name" :
-                    addToRequest.append(entry.getKey() + " LIKE '" + entry.getValue() + "'");
-                    break;
-                case "type" :
+            switch (entry.getKey()) {
+                case "name" -> addToRequest.append(entry.getKey()).append(" LIKE '").append(entry.getValue()).append("'");
+                case "type" -> {
                     String[] result = entry.getValue().split(",");
-                    for(int i=0 ; i <result.length ; i++ ){
-                        if (i>0){
+                    for (int i = 0; i < result.length; i++) {
+                        if (i > 0) {
                             addToRequest.append(" OR ");
                         }
-                        addToRequest.append(entry.getKey()+" = '"+ result[i]+"'");
+                        addToRequest.append(entry.getKey()).append(" = '").append(result[i]).append("'");
                     }
-                    break;
-                case "sort" :
-
+                }
+                case "sort" -> {
                     String[] resultSort = entry.getValue().split(",");
-                    addToRequest2.append( " ORDER BY ");
-                    for(int i=0 ; i <resultSort.length ; i++ ){
-                        if (i>0){
-                            addToRequest2.append(" , ");
+                    addToRequestOrder.append(" ORDER BY ");
+                    for (int i = 0; i < resultSort.length; i++) {
+                        if (i > 0) {
+                            addToRequestOrder.append(" , ");
                         }
-                        addToRequest2.append(entry.getValue()).append(" ").append("ASC");
-
+                        addToRequestOrder.append(entry.getValue()).append(" ").append("ASC");
                     }
-        }}
-
-        return this.readAll(addToRequest.toString() + addToRequest2.toString(), value);
+                }
+            }
+        }
+        return this.readAll(addToRequest + addToRequestOrder.toString());
     }
 }
