@@ -14,10 +14,27 @@ public class HandleSortingInputService {
         return orders;
     }
 
-    public static HashMap<String, String> makeFilters(String type){
+    public static HashMap<String, String> makeFilters(String type, String rating){
         HashMap<String, String> orders = new HashMap<>();
         if (type != null){
             orders.put("type", type);
+        }
+        if (rating != null){
+            orders.put("rating", rating);
+        }
+        return orders;
+    }
+
+    public static HashMap<String, String> genericResearch(String type, String name, String sort){
+        HashMap<String, String> orders = new HashMap<>();
+        if (type != null){
+            orders.put("type", type);
+        }
+        if (name != null){
+            orders.put("name", name.replace('*', '%'));
+        }
+        if (sort!= null){
+            orders.put("sort", sort);
         }
         return orders;
     }

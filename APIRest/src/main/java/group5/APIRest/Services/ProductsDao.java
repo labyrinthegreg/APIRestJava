@@ -38,7 +38,37 @@ public class ProductsDao {
                         }
                         toReturn.append(entry.getKey()+" = '"+ result[i]+"'");
                     }
+                    break;
+                case "rating" :
+                    boolean comparator = entry.getValue().charAt(0) == '(';
+                    String value_ = (comparator?
+                            entry.getValue().replace("(", "").replace(")","") :
+                            entry.getValue());
+                    String[] resultRating = value_.split(",");
+                    String compare = " = ";
+                    boolean firstEntry_ = true ;
+                    for(int i=0 ; i <resultRating.length ; i++ ){
+                        if (comparator){
+                            if (i>0){
+                                compare = " <= ";
+                            }else {
+                                compare = " >= ";
+                            }
+                            if (!firstEntry_){
+                                toReturn.append(" AND ");
+                            }
+                        }
+                        if (i>0 && !comparator){
+                            toReturn.append(" OR ");
+                        }
+                        if (resultRating[i] !=""){
+                            toReturn.append(entry.getKey() + compare + resultRating[i]);
+                            firstEntry_=false;
+                        }
+                    }
+                    break;
             }
+            firstEntry = false;
         }
         return toReturn.toString();
     }
@@ -87,12 +117,43 @@ public class ProductsDao {
         return this.updateAndClose(sql);
     }
 
-    // public List<Products> readOneByType(String type, String name){
-    //     String sql = "SELECT * FROM PRODUCTS WHERE type = ? AND name = ?";
-    //     this.value = new String[]{String.valueOf(type), String.valueOf(name)};
-    //     for (int i = 0; i <= value.length; i++) {
-    //         return jdbcTemplate.query(sql, this.value, BeanPropertyRowMapper.newInstance(Products.class));
-    //     }
-    //     return null;
-    // }
+    public List<Products> genericResearch(Map<String, String> researchProducts){
+        StringBuilder addToRequest = new StringBuilder();
+        StringBuilder addToRequest2 = new StringBuilder();
+        Object[] value = null;
+        boolean firstEntry = true;
+
+        for(var entry : researchProducts.entrySet()){
+            if(entry.getKey()!="sort"){
+                addToRequest.append(firstEntry ? " WHERE " : " AND ");
+                firstEntry = false;
+            }
+            switch(entry.getKey()){
+                case "name" :
+                    addToRequest.append(entry.getKey() + " LIKE '" + entry.getValue() + "'");
+                    break;
+                case "type" :
+                    String[] result = entry.getValue().split(",");
+                    for(int i=0 ; i <result.length ; i++ ){
+                        if (i>0){
+                            addToRequest.append(" OR ");
+                        }
+                        addToRequest.append(entry.getKey()+" = '"+ result[i]+"'");
+                    }
+                    break;
+                case "sort" :
+
+                    String[] resultSort = entry.getValue().split(",");
+                    addToRequest2.append( " ORDER BY ");
+                    for(int i=0 ; i <resultSort.length ; i++ ){
+                        if (i>0){
+                            addToRequest2.append(" , ");
+                        }
+                        addToRequest2.append(entry.getValue()).append(" ").append("ASC");
+
+                    }
+        }}
+
+        return this.readAll(addToRequest.toString() + addToRequest2.toString(), value);
+    }
 }
