@@ -55,7 +55,7 @@ public class ProductsDao {
 
     public int add(Products products){
         String sql = "INSERT INTO products (name , type, rating, category_id) VALUES (?, ?, ?, ?);";
-        this value = new Object[]{products.getName(), products.getType(), products.getRating(), products.getCategory_id()};
+        this.value = new Object[]{products.getName(), products.getType(), products.getRating(), products.getCategory_id()};
         return this.updateAndClose(sql);
     }
     public List<Products> readAll(String sql_bis, Object[] value){
