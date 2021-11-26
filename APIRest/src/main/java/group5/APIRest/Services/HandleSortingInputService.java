@@ -30,13 +30,16 @@ public class HandleSortingInputService {
      * @param rating value from URL
      * @return the map object
      */
-    public static HashMap<String, String> makeFilters(String type, String rating){
+    public static HashMap<String, String> makeFilters(String type, String rating, String createdat){
         HashMap<String, String> orders = new HashMap<>();
         if (type != null){
             orders.put("type", type);
         }
         if (rating != null){
             orders.put("rating", rating);
+        }
+        if (createdat != null){
+            orders.put("createdat", createdat);
         }
         return orders;
     }
