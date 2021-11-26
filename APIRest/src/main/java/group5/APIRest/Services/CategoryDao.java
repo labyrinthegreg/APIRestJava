@@ -31,7 +31,7 @@ public class CategoryDao {
     }
 
     public Categories listOneById(int id) {
-        String sql = "SELECT C.name, C.description FROM Categories as C WHERE C.id = ?";
+        String sql = "SELECT * FROM Categories as C WHERE C.id = ?";
         this.value = new String[]{String.valueOf(id)};
         return this.executeAndClose(sql).get(0);
     }

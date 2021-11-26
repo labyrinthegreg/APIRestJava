@@ -35,11 +35,12 @@ public class CrudProductController {
     public List<Products> readAllProducts(@RequestParam(required = false) String asc,
                                           @RequestParam(required = false) String desc,
                                           @RequestParam(required = false) String type,
-                                          @RequestParam(required = false) String rating){
+                                          @RequestParam(required = false) String rating,
+                                          @RequestParam(required = false) String createdat){
         // Creating a string for all the parameters includes in the request
         String addToRequest = "";
         // Adding the parameters for the filters and the sorts
-        Map<String, String> whereClose = HandleSortingInputService.makeFilters(type,rating);
+        Map<String, String> whereClose = HandleSortingInputService.makeFilters(type,rating, createdat);
         addToRequest += productsDao.reqWhere(whereClose);
 
         Map<String, String> orders = HandleSortingInputService.makeOrderMap(asc, desc);
@@ -86,7 +87,6 @@ public class CrudProductController {
      /***
      * Function to delete a product with a specific id in the database
      * @param id
-     * @param products
      * @return a JsonObject with a message of success
      */
     @DeleteMapping("/{id}")

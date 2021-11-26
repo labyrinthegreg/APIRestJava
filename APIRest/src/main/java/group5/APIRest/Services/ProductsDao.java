@@ -45,38 +45,51 @@ public class ProductsDao {
         StringBuilder toReturn = new StringBuilder();
         boolean firstEntry = true;
         for (var entry : orders.entrySet()) {
+
             toReturn.append(firstEntry ? " WHERE " : " AND ");
-            switch (entry.getKey()) {
-                case "type" -> {
-                    String[] result = entry.getValue().split(",");
+            boolean isRange = entry.getValue().charAt(0) == '(';
+            String value_ = (isRange ?
+                    entry.getValue().replace("(", "").replace(")", "")
+                    : entry.getValue());
+            String key = entry.getKey();
+            String[] result = value_.split(",");
+            String comparator = (isRange ? " >= " : " = ");
+
+            switch (key) {
+                case "type":
                     for (int i = 0; i < result.length; i++) {
                         if (i > 0) {
                             toReturn.append(" OR ");
                         }
-                        toReturn.append(entry.getKey()).append(" = '").append(result[i]).append("'");
+                        toReturn.append(key).append(" = '").append(result[i]).append("'");
                     }
-                }
-                case "rating" -> {
-                    boolean isRange = entry.getValue().charAt(0) == '(';
-                    String value_ = (isRange ?
-                            entry.getValue().replace("(", "").replace(")", "")
-                            : entry.getValue());
-                    String[] resultRating = value_.split(",");
-                    String comparator = (isRange ? " >= " : " = ");
+                    break;
+                case "createdat":
+                    //Before doing the build of the sql request, we need to translate the date value
+                    //Like, if we give "01-05-2021", it will result "20210501"
+                    key = "created_at";
+                    if (!isRange) {
+                        comparator = " LIKE ";
+                    }
+                    for(int i = 0; i<result.length; i++){
+                        result[i] = "'"+ result[i] + (!isRange? "%" : "") +"'";
+                    }
+
+                case "rating":
                     boolean firstEntry_ = true;
-                    for (int i = 0; i < resultRating.length; i++) {
+                    for (int i = 0; i < result.length; i++) {
                         if (isRange && i > 0) {
                             comparator = " <= ";
                         }
                         if (!firstEntry_) {
                             toReturn.append(isRange ? " AND " : " OR ");
                         }
-                        if (!resultRating[i].equals("")) {
-                            toReturn.append(entry.getKey()).append(comparator).append(resultRating[i]);
+                        if (!result[i].equals("")) {
+                            toReturn.append(key).append(comparator).append(result[i]);
                             firstEntry_ = false;
                         }
                     }
-                }
+                    break;
             }
             firstEntry = false;
         }
