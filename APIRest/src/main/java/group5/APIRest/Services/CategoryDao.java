@@ -33,7 +33,11 @@ public class CategoryDao {
     public Categories listOneById(int id) {
         String sql = "SELECT * FROM Categories as C WHERE C.id = ?";
         this.value = new String[]{String.valueOf(id)};
-        return this.executeAndClose(sql).get(0);
+        try {
+            return this.executeAndClose(sql).get(0);
+        }catch (IndexOutOfBoundsException e){
+            return new Categories(){};
+        }
     }
 
     public int addCategory(Categories category){
