@@ -1,8 +1,5 @@
 package group5.APIRest.controller;
 
-/***
- * All imports
- */
 import group5.APIRest.Services.HandleSortingInputService;
 import group5.APIRest.Services.ProductsDao;
 import group5.APIRest.models.Products;
