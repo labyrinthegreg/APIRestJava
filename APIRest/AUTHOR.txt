@@ -1,0 +1,4 @@
+Paul GENEVE: Création des models des categories et des produits / Ajout des filtres sur les types et les notes des produits / Ajout de la doc swagger
+Mickael GBAGUIDI: Création du repository ProductsDao / Ajout des méthodes DELETE,POST,PUT des produits / Ajout de la recherche générique / Ajout des tests sur le controller des produits.
+Lubin PAULY: Création des différents controllers / Création des méthodes GET pour les produits en générale et avec les id / Optimisation du code / Ajout des tri croissant et décroissant sur les produits / Ajout de Java Doc
+Léo GREGORI(Srum Master): Initialisation du projet / Création des méthodes DELETE,POST,PUT des catégories / Optimisation du code / Ajout de pagination et gestion d'erreur sur celle-ci / Ajout de Java Doc 
