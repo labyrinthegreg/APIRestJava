@@ -17,13 +17,29 @@ public class ProductsDao {
 
     private Object[] value = null;
 
+    /**
+     * Execute research with the sql request using jdbcTemplate
+     * @param sql the sql request
+     * @return the List of all product we search for
+     */
     private List<Products> executeAndClose(String sql){
         return jdbcTemplate.query(sql, this.value, BeanPropertyRowMapper.newInstance(Products.class));
     }
-    private  int updateAndClose(String sql){
+
+    /**
+     * Update the sql database with the sql request using jdbcTemplate
+     * @param sql, the sql request
+     * @return the number of row updated
+     */
+    private int updateAndClose(String sql){
         return jdbcTemplate.update(sql, this.value);
     }
 
+    /**
+     * Make a string to add to another SELECT request where we want a WHERE clause
+     * @param orders a map with all the data we want to add, which has the form 'key = value' in the DB
+     * @return a part to add to the sql request
+     */
     public String reqWhere(Map<String, String> orders){
         //String request = "type = Boisson OR type = pate  ";
         StringBuilder toReturn = new StringBuilder();
@@ -67,6 +83,11 @@ public class ProductsDao {
         return toReturn.toString();
     }
 
+    /**
+     * Make a string to add to another SELECT request where we want an ORDER BY clause
+     * @param orders a map with all the data we want to add, which has the form 'value KEY'(key can be ASC or DESC) in the DB
+     * @return a part to add to the sql request
+     */
     public String reqOrder(Map<String, String> orders){
         StringBuilder toReturn = new StringBuilder();
         boolean firstEntry = true;
@@ -77,40 +98,85 @@ public class ProductsDao {
         return toReturn.toString();
     }
 
+    /**
+     * Insert into the db a Product
+     * @param products to add, it's given in a json form the request of the user
+     * @return the row affected by the request
+     */
     public int add(Products products){
         String sql = "INSERT INTO products (name , type, rating, category_id) VALUES (?, ?, ?, ?);";
         this.value = new Object[]{products.getName(), products.getType(), products.getRating(), products.getCategory_id()};
         return this.updateAndClose(sql);
     }
+
+    /**
+     * See all the product saved in the DB
+     * @param sql_bis a part to add to the request if their some filters in the url
+     * @return the list of products from the DB
+     */
     public List<Products> readAll(String sql_bis){
         String sql = "SELECT * FROM Products" + sql_bis;
         this.value = null;
         return this.executeAndClose(sql);
     }
+
+    /**
+     * Get 1 Product from the DB, select by its id,
+     * If the wanted ID does not match with a Product in the DB, we send a Blank Product with no data
+     * @param id of the product wanted
+     * @return the data of the product
+     */
     public Products readOneById(int id){
         String sql = "SELECT * FROM Products as P WHERE P.id = ?";
         this.value = new Object[]{id};
-        return this.executeAndClose(sql).get(0);
+        try {
+            return this.executeAndClose(sql).get(0);
+        }
+        catch (IndexOutOfBoundsException e){
+            return new Products(){};
+        }
     }
 
+    /**
+     * Give a List of a given number of product from the DB
+     * @param startNb the offset value where we want to start to display product
+     * @param rowsCounted the number of row to display
+     * @return the list of product
+     */
     public List<Products> readByRangeProducts(int startNb, int rowsCounted){
         String sql = "SELECT * FROM products LIMIT ? , ? ";
         this.value = new Object[]{startNb, rowsCounted};
         return this.executeAndClose(sql);
     }
 
+    /**
+     * Delete a product by ID
+     * @param id the id of the product
+     * @return the number of row affected
+     */
     public int delete(Integer id){
         String sql = "DELETE FROM products WHERE id = ?";
         this.value = new Object[]{id};
-        return  this.updateAndClose(sql);
+        return this.updateAndClose(sql);
     }
 
+    /**
+     * Update the data of a specific product
+     * @param id the id of the product
+     * @param product the new data of the product
+     * @return the number of row affected
+     */
     public int updateProduct(Integer id, Products product){
         String sql = "update products set name = ?, type = ?, rating = ?, category_id = ? where id = ?";
         this.value = new Object[] {product.getName(), product.getType(), product.getRating(), product.getCategory_id() , id};
         return this.updateAndClose(sql);
     }
 
+    /**
+     * Search for all the Product with the match data given in the map Object
+     * @param researchProducts the map with all the data wanted from the url
+     * @return the list of product
+     */
     public List<Products> genericResearch(Map<String, String> researchProducts){
         StringBuilder addToRequest = new StringBuilder();
         StringBuilder addToRequestOrder = new StringBuilder();
