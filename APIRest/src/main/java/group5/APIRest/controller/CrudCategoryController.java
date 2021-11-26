@@ -50,7 +50,7 @@ public class CrudCategoryController {
     @PostMapping("")
     public JSONObject createCategory(@RequestBody Categories category){
         categoryDao.addCategory(category); 
-        String message = "New product " + category.getName() +" created.";
+        String message = "New category " + category.getName() +" created.";
         return this.msgReturn.appendField("message", message);
     }
 
