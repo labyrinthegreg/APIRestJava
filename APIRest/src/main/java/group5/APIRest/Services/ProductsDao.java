@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -43,6 +44,7 @@ public class ProductsDao {
     public String reqWhere(Map<String, String> orders){
         //String request = "type = Boisson OR type = pate  ";
         StringBuilder toReturn = new StringBuilder();
+        List<String> newValue = new ArrayList<>();
         boolean firstEntry = true;
         for (var entry : orders.entrySet()) {
 
@@ -54,19 +56,18 @@ public class ProductsDao {
             String key = entry.getKey();
             String[] result = value_.split(",");
             String comparator = (isRange ? " >= " : " = ");
-
             switch (key) {
                 case "type":
                     for (int i = 0; i < result.length; i++) {
                         if (i > 0) {
                             toReturn.append(" OR ");
                         }
-                        toReturn.append(key).append(" = '").append(result[i]).append("'");
+                        toReturn.append(key).append(" = ?");
+                        newValue.add(result[i]);
                     }
                     break;
                 case "createdat":
                     //Before doing the build of the sql request, we need to translate the date value
-                    //Like, if we give "01-05-2021", it will result "20210501"
                     key = "created_at";
                     if (!isRange) {
                         comparator = " LIKE ";
@@ -85,7 +86,8 @@ public class ProductsDao {
                             toReturn.append(isRange ? " AND " : " OR ");
                         }
                         if (!result[i].equals("")) {
-                            toReturn.append(key).append(comparator).append(result[i]);
+                            toReturn.append(key).append(comparator).append("?");
+                            newValue.add(result[i]);
                             firstEntry_ = false;
                         }
                     }
@@ -93,6 +95,7 @@ public class ProductsDao {
             }
             firstEntry = false;
         }
+        this.value = new Object[]{newValue};
         return toReturn.toString();
     }
 
@@ -129,7 +132,11 @@ public class ProductsDao {
      */
     public List<Products> readAll(String sql_bis){
         String sql = "SELECT * FROM Products" + sql_bis;
-        this.value = null;
+        if (sql_bis.equals("")){
+            this.value = null;
+        }
+        System.out.println(sql_bis);
+        System.out.println(this.value.getClass());
         return this.executeAndClose(sql);
     }
 
@@ -193,6 +200,8 @@ public class ProductsDao {
     public List<Products> genericResearch(Map<String, String> researchProducts){
         StringBuilder addToRequest = new StringBuilder();
         StringBuilder addToRequestOrder = new StringBuilder();
+
+        List<String> newValue = new ArrayList<>();
         boolean firstEntry = true;
 
         for(var entry : researchProducts.entrySet()){
@@ -201,14 +210,18 @@ public class ProductsDao {
                 firstEntry = false;
             }
             switch (entry.getKey()) {
-                case "name" -> addToRequest.append(entry.getKey()).append(" LIKE '").append(entry.getValue()).append("'");
+                case "name" -> {
+                    addToRequest.append(entry.getKey()).append(" LIKE ?");
+                    newValue.add(entry.getValue());
+                }
                 case "type" -> {
                     String[] result = entry.getValue().split(",");
                     for (int i = 0; i < result.length; i++) {
                         if (i > 0) {
                             addToRequest.append(" OR ");
                         }
-                        addToRequest.append(entry.getKey()).append(" = '").append(result[i]).append("'");
+                        addToRequest.append(entry.getKey()).append(" = ?");
+                        newValue.add(result[i]);
                     }
                 }
                 case "sort" -> {
@@ -218,11 +231,13 @@ public class ProductsDao {
                         if (i > 0) {
                             addToRequestOrder.append(" , ");
                         }
-                        addToRequestOrder.append(entry.getValue()).append(" ").append("ASC");
+                        addToRequestOrder.append("? ").append("ASC");
+                        newValue.add(entry.getValue());
                     }
                 }
             }
         }
+        this.value = new Object[]{newValue};
         return this.readAll(addToRequest + addToRequestOrder.toString());
     }
 }
